@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Java interface와 namespace를 맞추어준다. -->
+<mapper namespace="org.zerock.mapper.RoomMapper">
+
+<insert id="insertRoom">
+	insert into room (product_id,buyer,seller,roomName) values (#{product_id}, #{buyer}, #{seller}, #{roomName})
+	ON DUPLICATE KEY UPDATE product_id = #{product_id}, buyer = #{buyer}, seller = #{seller}, roomName = #{roomName};
+</insert>
+<select id="selectAllRoom" resultType="org.zerock.domain.Room">
+	select * from room
+</select>
+
+<select id="selectSellerRoom" resultType="org.zerock.domain.Room">
+	select * from room where seller = #{seller}
+</select>
+
+<select id="selectBuyerRoom" resultType="org.zerock.domain.Room">
+	select * from room where buyer = #{buyer}
+</select>
+<delete id="deleteRoom">
+	DELETE FROM room where room_id = #{room_id};
+</delete>
+<insert id="insertScore">
+	insert into score (user_id,product_id,user_score,cause) values (#{user_id}, #{product_id}, #{user_score}, #{cause})
+</insert>
+<select id="selectScore" resultType="org.zerock.domain.ScoreVO">
+	select * from score where user_id = #{user_id}
+</select>
+<select id="selectOneRoom" resultType="org.zerock.domain.Room">
+	select * from room where room_id = #{room_id}
+</select>
+<select id="selectOneRoomByProduct_id" resultType="org.zerock.domain.Room">
+	select * from room where product_id = #{product_id}
+</select>
+<insert id="insertComplete">
+	insert into completeAU (product_id,buyer_id,seller_id) 
+	select #{product_id}, #{buyer_id}, #{seller_id}
+	from dual
+	where not exists (select product_id from completeAU where product_id = #{product_id});
+</insert>
+<select id="selectComplete" resultType="org.zerock.domain.CompleteVO">
+	select * from completeAU where product_id = #{product_id}
+</select>
+<delete id="deleteComplete">
+	DELETE FROM completeAU where product_id = #{product_id};
+</delete>
+<update id="updateSellerCheck"> 
+	update completeAU set seller_check = #{seller_check} where product_id = #{product_id} 
+</update>
+<update id="updateBuyerCheck"> 
+	update completeAU set buyer_check = #{buyer_check} where product_id = #{product_id} 
+</update>
+<select id="resultCheck" resultType="org.zerock.domain.CompleteVO">
+	select * from completeAU where product_id = #{product_id}
+</select>
+<update id="updateResult"> 
+	update completeAU set result = 1 where product_id = #{product_id} 
+</update>
+<insert id="insertSuccessTradeSeller">
+	insert into trade(user_id, total_count_s, fail_count_s) values (#{user_id} , 1, 0) 
+	on DUPLICATE KEY UPDATE total_count_s = total_count_s+1;
+</insert>
+<insert id="insertSuccessTradeBuyer">
+	insert into trade(user_id, total_count_b, fail_count_b) values (#{user_id} , 1, 0) 
+	on DUPLICATE KEY UPDATE total_count_b = total_count_b+1;
+</insert>
+<insert id="insertFailTradeSeller">
+	insert into trade(user_id, total_count_s, fail_count_s) values (#{user_id} , 1, 1) 
+	on DUPLICATE KEY UPDATE total_count_s = total_count_s+1, fail_count_s = fail_count_s+1;
+</insert>
+<insert id="insertFailTradeBuyer">
+	insert into trade(user_id, total_count_b, fail_count_b) values (#{user_id} , 1, 1) 
+	on DUPLICATE KEY UPDATE total_count_b = total_count_b+1, fail_count_b = fail_count_b+1;
+</insert>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.mapper.TotalMapper">
+
+	<select id="readTotalBid" resultType="org.zerock.domain.Bid_historyVO">
+		select user_id, bid_date, product_id, Max(current_price) as current_price from bid_history where user_id = #{user_id} group by product_id limit #{cri.pageStart},#{cri.onePageNum}
+	</select>
+	
+	<select id="readAllTotalBid" resultType="org.zerock.domain.Bid_historyVO">
+		select user_id, bid_date, product_id, Max(current_price) as current_price from bid_history where user_id = #{user_id} group by product_id;
+	</select>
+
+	
+	<select id="readTotalBidCount" resultType="int">
+		select count(A.product_id) from (select product_id from bid_history where user_id = #{user_id} group by product_id) as A
+	</select>
+</mapper>

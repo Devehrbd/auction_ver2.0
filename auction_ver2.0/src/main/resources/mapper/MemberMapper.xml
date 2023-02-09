@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.mapper.MemberMapper">
+
+<select id="readMember" resultType="org.zerock.domain.MemberVO">
+	select * from memberAU where user_id = #{user_id};
+</select>
+<insert id="joinMember">
+	insert into memberAU (user_id, name, pw, phone, birth) values (#{user_id}, #{name}, #{pw}, #{phone}, #{birth})
+</insert>
+<delete id="resignMember">
+	DELETE FROM memberAU where user_id = #{user_id};
+</delete>
+<update id="updateMember"> 
+	update memberAU set 
+	name = #{name},
+	pw = #{pw},
+	phone = #{phone},
+	birth = #{birth}  
+	where user_id = #{user_id} 
+</update>
+<delete id="deleteBid_history">
+	DELETE FROM bid_history where user_id = #{user_id};
+</delete>
+<delete id="deleteTrade">
+	DELETE FROM trade where user_id = #{user_id};
+</delete>
+
+<select id="existScore" resultType="org.zerock.domain.ScoreVO">
+	select * from score where user_id = #{user_id} and product_id = #{product_id};
+</select>
+</mapper>

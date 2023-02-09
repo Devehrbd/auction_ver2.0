@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<th:block th:insert="header/header :: headerHead"></th:block>
+<style>
+main {
+	background-color: white;
+	width : 1130px;
+	height : 1000px;
+	margin : 0 auto;
+
+}
+
+.main_wrap {
+	width : 100%;
+	height : 70%;
+	position: relative;
+	margin: 0 auto;
+	
+	display : flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.main_center_wrap{
+	width : 100%;
+	height : 30%;
+	
+	display : flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.main_center_wrap img{
+	width : 100px;
+	height : 100px;
+}
+
+.main_center_wrap div{
+	width : 100px;
+	height : 100px;
+	
+	display : flex;
+	justify-content: center;
+	align-items: center;
+	
+	font-size : 20px;
+	color: #FF7E9D;
+	font-weight: bold;
+}
+
+.main_center_wrap div span:hover{
+	color: #FFDCE1;
+	cursor: pointer;
+}
+
+.main_img_wrap {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	top: 0%;
+	margin: 0 auto;
+	float: left;
+	
+	
+}
+
+.main_img_wrap img {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+.main_text_wrap {
+	height: 100%;
+	width: 50%;
+	float: left;
+	position: relative;
+}
+
+.main_text_big_div {
+	position: absolute;
+	top: 20%;
+	font-size: 40px;
+	font-weight: 1000;
+	width: 100%;
+	height: 10%;
+	text-align: center;
+}
+
+.main_text_small_div {
+	position: absolute;
+	font-size: 25px;
+	top: 50%;
+	width: 100%;
+	height: 10%;
+	text-align: center;
+}
+
+
+
+/*  modal  */
+
+.main_modal_wrap{
+	display : none;
+	width : 700px;
+	height : 700px;
+	position : fixed;
+	top : 50%;
+	left : 50%;
+	transform: translate(-50%, -50%);
+	
+
+	
+}
+
+.main_modal_contents{
+	width : 100%;
+	height : 100%;
+	display : flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	background : #FFF0F5;
+	border-radius : 50px;
+	font-size : 18px;
+}
+
+.main_modal_contents p{
+	font-weight: bold;
+	cursor : pointer;
+}
+
+</style>
+<script th:inline="javascript">
+
+$(function(){
+	
+	$(".main_center_wrap div span").mouseenter(function(e){
+		
+		$(".main_modal_wrap").css("display","block")
+		
+	});
+	
+	$(".main_center_wrap div span").mouseleave(function(e){
+		
+		$(".main_modal_wrap").css("display","none")
+		
+	});
+});
+
+</script>
+<meta charset="UTF-8">
+<title>중고 경매 - 3RD</title>
+</head>
+<th:block th:insert="header/header :: headerBody"></th:block>
+<body>
+	<main>
+		
+		<div class="main_wrap">
+			<div class="main_img_wrap">
+				<img src="img/main/auction2.jpg">
+			</div>
+		</div>
+		
+		<div class = "main_center_wrap">
+			
+			<div>
+				<span>이 곳은?</span>
+			</div>
+		</div>
+		
+		<div class = "main_modal_wrap">
+		<div class = "main_modal_contents">
+			<p> 안녕하세요! 중고 경매 사이트입니다! </p>
+			<p> 실시간으로 모든것이 반영되는 시스템을 구현하고 싶었지만, </p>
+			<p> 서버 부하와 관련한 문제로 스케쥴을 이용해 처리하는 방법으로 처리하고 있습니다.</p>
+			<p> 10분에 한번 씩 채팅방 개설, 평가완료로 인한 채팅방 삭제 등</p>
+			<p> 몇가지부분이 스케쥴로 처리됩니다.</p>
+			<p> 불편하실것 같아 채팅방을 개설하고, </p>
+			<p> 입찰내역까지 체크해볼 수 있는 계정을 만들어두었습니다. </p>
+			<p> ldk1 계정 (pw: 1234) , ldk2 계정 (pw: 1234)입니다.</p>
+			<p> 추가로 이 사이트는 팀포트폴리오 RDS 계정문제 , 레거시 JSP 작업 환경에서 </p>
+			<p> 개인 편의를 위해 Thymeleaf 로 재작업 하는 과정중에 있습니다.</p>
+		
+		</div>	
+	</div>
+	</main>
+</body>
+</html>
+

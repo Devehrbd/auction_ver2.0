@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Java interface와 namespace를 맞추어준다. -->
+<mapper namespace="org.zerock.mapper.ProductMapper">
+
+	<sql id="criteria">
+		<trim prefix=" AND (" suffix=")" prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							title like CONCAT('%', #{keyword}, '%')
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+<delete id="deleteProduct">
+  delete from product where product_id = #{product_id};
+</delete>
+
+	<select resultType="org.zerock.domain.ProductPicVO" id="piclist">
+		select *
+		from picture where product_id = #{product_id}
+	</select>
+
+	<select resultType="int" id="picCount">
+		select count(picture_id) from
+		picture where product_id = #{product_id}
+	</select>
+
+<select resultType="String" id="readTitle">
+select title from product where product_id = #{product_id}; 
+</select>
+
+	<select id="readProductlist" resultType="org.zerock.domain.ProductVO">
+		select * from product where user_id = #{user_id} limit #{cri.pageStart},#{cri.onePageNum}
+	</select>
+
+<select resultType="Date" id="readRegDate">
+select date from product where product_id = #{product_id}; 
+</select>
+
+	<select id="readProductlistCount" resultType="int">
+		select count(B.product_id) from (select * from product where user_id = #{user_id}) as B;
+	</select>
+	
+<!-- 아래 동길 -->
+
+	<select resultType="org.zerock.domain.ProductVO"
+		id="readProduct">
+		select * from product where product_id = #{product_id}
+	</select>
+
+	<update id="updateCP">
+		update product set current_price = #{current_price}
+		where product_id =
+		#{product_id}
+	</update>
+
+	<select resultType="int" id="readCP">
+		select current_price from product
+		where product_id = #{product_id}
+	</select>
+
+	<insert id="insertCP">
+		insert into bid_history (user_id, current_price,
+		product_id) values
+		(#{user_id},#{current_price},#{product_id});
+	</insert>
+
+
+	<select resultType="String" id="readCPU">
+		select user_id from bid_history
+		where product_id = #{product_id} order by
+		current_price desc limit 1;
+	</select>
+	
+<select id="searchListSortStartPrice"
+	resultType="org.zerock.domain.ProductVO">
+	select * from product WHERE title like concat ('%',#{cri.keyword},'%') order by start_price asc;
+</select>
+<select id="listSortStartPrice"
+	resultType="org.zerock.domain.ProductVO">
+	select * from product order by start_price asc;
+</select>
+<select id="searchListSortDate"
+	resultType="org.zerock.domain.ProductVO">
+	select * from product WHERE title like concat ('%',#{cri.keyword},'%') order by date asc;
+</select>
+<select id="listSortDate"
+	resultType="org.zerock.domain.ProductVO">
+	select * from product order by date asc;
+</select>
+
+<select id="searchListSortStartPrice_desc"
+	resultType="org.zerock.domain.ProductVO">
+	select * from product WHERE title like concat ('%',#{cri.keyword},'%') order by start_price desc;
+</select>
+<select id="listSortStartPrice_desc"
+	resultType="org.zerock.domain.ProductVO">
+	select * from product order by start_price desc;
+</select>
+<select id="searchListSortDate_desc"
+	resultType="org.zerock.domain.ProductVO">
+	select * from product WHERE title like concat ('%',#{cri.keyword},'%') order by date desc;
+</select>
+<select id="listSortDate_desc"
+	resultType="org.zerock.domain.ProductVO">
+	select * from product order by date desc;
+</select>
+
+<select id="distanceYES"
+	resultType="org.zerock.domain.ProductVO">
+	select * from product where neighborhood = 'YES' and product_id = ${product_id};
+</select>
+
+
+	<!-- 아래 동길 -->
+
+	<select id="getList" resultType="org.zerock.domain.ProductVO">
+<![CDATA[
+select * from product where product_id > 0 order by product_id desc
+]]>
+</select>
+
+	<insert id="insert">
+		insert into product (title, description,
+		start_price,current_price)
+		values (#{title}, #{description}, #{
+		start_price},#{current_price})
+	</insert>
+
+	<insert id="registProduct">
+		insert into product (title, user_id,description, start_price) 
+		values (#{title},#{user_id}, #{description}, #{start_price})
+	</insert>
+	<insert id="registProductSK" useGeneratedKeys="true"
+		keyProperty="product_id" keyColumn="product_id">
+		insert into product (title, user_id,description, start_price)
+		values (#{title}, #{user_id},#{description}, #{start_price})
+		<selectKey keyProperty="product_id" order="AFTER"
+			resultType="Integer">
+			select last_insert_id() as product_id
+		</selectKey>
+	</insert>
+	<insert id="registProductNeighborhoodSK" useGeneratedKeys="true"
+		keyProperty="product_id" keyColumn="product_id">
+		insert into product (title,user_id, description, start_price, neighborhood)
+		values (#{title},#{user_id}, #{description}, #{start_price}, #{neighborhood})
+		<selectKey keyProperty="product_id" order="AFTER"
+			resultType="Integer">
+			select last_insert_id() as product_id
+		</selectKey>
+	</insert>
+	<select id="read" resultType="org.zerock.domain.ProductVO">
+		select * from product where product_id = #{product_id}
+	</select>
+	
+		<select id="searchList"
+			resultType="org.zerock.domain.ProductVO">
+			select * from product WHERE title like concat ('%',#{keyword},'%') order by current_price;
+		</select>
+		
+	<select id="price_desc" resultType="org.zerock.domain.ProductVO">
+		select * from product order by start_price desc
+	</select>
+	<select id="pronew" resultType="org.zerock.domain.ProductVO">
+		select * from product order by date desc
+	</select>
+	
+	<select id="distance" resultType="org.zerock.domain.ProductVO">
+		select * from product where neighborhood like "yes";
+	</select>
+<!-- 호준 -->
+<update id="updateDeadline"> 
+	update product set 
+	deadline = #{deadline}
+	where product_id = #{product_id} 
+</update>
+<select id="BuyerIsWho" resultType="String">
+	select user_id from bid_history 
+	where product_id = #{product_id} and current_price = (select max(current_price) from bid_history where product_id = #{product_id})
+</select>
+
+<select id="IsExist" resultType="int">
+	select exists (select * from product where user_id = #{user_id});
+</select>
+<select id="selectTrade" resultType="org.zerock.domain.TradeVO">
+	select * from trade where user_id = #{user_id}
+</select>
+<update id="priceSale"> 
+	update product set 
+	start_price = #{start_price}
+	where product_id = #{product_id} 
+</update>
+
+<select id="readBidList" resultType="org.zerock.domain.Bid_historyVO">
+   select * from bid_history where user_id = #{user_id}
+</select>
+<select id="selectGPS" resultType="org.zerock.domain.GPSVO">
+   select * from product_gps where product_id = #{product_id}
+</select>
+<select id="price_asc" resultType="org.zerock.domain.ProductVO">
+		select * from product order by start_price asc
+</select>
+<select id="pronew_asc" resultType="org.zerock.domain.ProductVO">
+		select * from product order by date asc
+	</select>
+</mapper>
+

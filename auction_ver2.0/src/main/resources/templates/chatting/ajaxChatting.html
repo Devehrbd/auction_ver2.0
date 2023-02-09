@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<div id="chating" class="chating" >
+			<div th:each="chat, status : ${chat_log}">
+				
+						<div th:if="${chat.user_id == session.sessionUser}" class = "chatting_me_box_wrap">
+							<div class = "chatting_me_box_date"><p th:text="${chat_date[status.index]}"></p></div>
+							<div class = "chatting_me_box"><p class='me' th:text="${chat.chat}"></p></div>
+						</div>
+					
+					<div th:if="${chat.user_id != session.sessionUser}" class = "chatting_others_box_wrap">
+						<div class = "user_icon_div"><img class = "user_icon_img" src = "../img/chatting/user_icon.jpg"></div>
+						<div class = "chatting_others_box">
+							<div class = "others_chat" th:text="${chat.user_id}"></div>
+							<div class = "others_chat_chat"><p class='others' th:text="${chat.chat}"></p></div>				
+						</div>
+						<div class = "chatting_others_box_date"><p th:text="${chat_date[status.index]}"></p></div>
+					</div>
+					
+		 	</div>
+		</div>
+</html>
+ 

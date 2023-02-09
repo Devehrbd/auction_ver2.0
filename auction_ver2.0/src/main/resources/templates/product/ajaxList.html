@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<div class="pro_wrap" id="item">
+	<div th:each="product, i: ${list}">
+
+		<div class="pro_list_wrap">
+			<div th:if="${#strings.equals(product.neighborhood, 'YES')}">
+				<div class="gps_icon">
+					<img class="gps_icon_img" src="/img/list/check.png">
+				</div>
+				<div class="gps_icon_des">5KM 이내 동네거래를 선호하는 판매자입니다.</div>
+			</div>
+			<div class="pic_list">
+				<a class="pro_img_a" th:href="@{/product/view(product_id=${product.product_id})}">
+					<img th:if="${picList[i.index]!=null}" class="pro_img" th:src="@{/productUpload/}+${picList[i.index]}"> 
+					<img th:unless="${picList[i.index]!=null}" class="pro_img" src="/img/list/noImage.png">
+				</a>
+			</div>
+			<!-- pic -->
+			<ul class="item-features list-unstyled">
+				<li class="title" th:text='${product.title}'></li>
+			</ul>
+			<div class="sp10"></div>
+			<ul class="item-features list-unstyled">
+				<li class="start_price1">시작가</li>
+				<li class="start_price2" th:text='|${product.start_price}원|'></li>
+			</ul>
+			<div class="sp1"></div>
+			<ul class="item-features list-unstyled">
+				<li class="current_price1">현재가</li>
+				<li class="current_price2" th:text='|${product.current_price}원|'></li>
+			</ul>
+			<div class="sp10"></div>
+			<div class="pro_buy" align="center">
+				<a href="view?product_id=${product.product_id}" class="buy_btn">응찰하기</a>
+			</div>
+			<br>
+			<!-- pro buy -->
+		</div>
+		<!-- list wrap -->
+
+	</div>
+</div>

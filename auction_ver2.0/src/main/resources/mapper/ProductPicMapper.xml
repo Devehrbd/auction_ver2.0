@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Java interface와 namespace를 맞추어준다. -->
+<mapper namespace="org.zerock.mapper.ProductPicMapper">
+
+<insert id="RegistProductPic">
+insert into picture (picture_name, picture_path, product_id) values (#{picture_name},#{picture_path},#{product_id})
+</insert>
+
+<select id="readProductPicOne" resultType="org.zerock.domain.ProductPicVO">
+select * from picture where product_id = #{product_id} order by picture_id limit 1;
+</select>
+
+<delete id="DeleteProductPic">
+  delete from picture where product_id = #{product_id};
+</delete>
+
+</mapper>

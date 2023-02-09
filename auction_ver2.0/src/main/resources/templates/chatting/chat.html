@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<th:block th:insert="header/header :: headerHead"></th:block>
+<meta charset="UTF-8">
+<style>
+main {
+	width: 1130px;
+	margin: 0 auto;
+	height: 1000px;
+}
+
+/* 1-1 */
+.chatting_top_wrapper {
+	width: 100%;
+	height: 10%;
+	position: relative;
+	background: #FFBF2C;
+}
+
+.chatting_center_wrapper {
+	width: 100%;
+	background-color: #FFF2AB;
+	overflow: auto;
+	height: 90%;
+	position: relative;
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+.chatting_center_wrapper::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera*/
+}
+
+/*1-1-1 */
+.roomName_wrap {
+	position: absolute;
+	left: 10%;
+	top: 25%;
+	color: #F6EEDC;
+	font-size: 1.8rem;
+	max-width: 70%;
+}
+
+.complete_wrap {
+	position: absolute;
+	right: 5%;
+	top: 30%;
+}
+
+#btn-modal {
+	border: none;
+	background: #94918A;
+	width: 80px;
+	height: 40px;
+	color: white;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+/* 2-1 */
+.chatting_me_box_wrap {
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.chatting_others_box_wrap {
+	display: flex;
+	justify-content: flex-front;
+	width: 100%;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+/*2-1-1 */
+.user_icon_div {
+	position: relative;
+	overflow: hidden;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	margin: 5px;
+	margin-right: 20px;
+	margin-left: 20px;
+}
+
+.others_chat {
+	width: 100px;
+	height: 30px;
+}
+
+.user_icon_img {
+	width: 70px;
+	height: 70px;
+	position: absolute;
+	background: white;
+	left: 50%;
+	top: -20%;
+	transform: translateX(-50%);
+}
+
+.chatting_me_box {
+	max-width: 80%;
+	border-radius: 10px;
+	background: #F7DF66;
+	display: inline-block;
+	margin-right: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+	font-size: 1.1rem;
+}
+
+.chatting_others_box {
+	display: flex;
+	flex-direction: column;
+}
+
+.others_chat_chat {
+	max-width: 80%;
+	border-radius: 10px;
+	background: white;
+	display: inline-block;
+	margin-right: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+	font-size: 1.1rem;
+}
+
+.chatting_me_box_date{
+	
+}
+
+.chatting_me_box_date p{
+ margin-top : 37px;
+ font-size : 0.8rem;
+ margin-right : 10px;
+ margin-bottom : 0px;
+}
+
+
+.chatting_others_box_date{
+	margin-bottom : 0px;
+	margin-top : 55px;
+	font-size : 0.8rem;
+}
+
+/*2-2*/
+.input_msg {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	bottom: 15px;
+	background : #FFF2AB;
+}
+
+.input_msg div {
+	padding: 10px;
+}
+
+.input_msg_center {
+	width: 70%;
+	height: 30px;
+	display: flex;
+	justify-content: center;
+}
+
+.input_msg_bottom {
+	width: 15%;
+	height: 30px;
+	display: flex;
+	justify-content: center;
+}
+
+.input_msg_center input {
+	width: 100%;
+	height: 25px;
+}
+
+.input_msg_bottom_button {
+	width: 100%;
+	height: 25px;
+}
+
+#modal.modal-overlay {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: rgba(255, 255, 255, 0.25);
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+	backdrop-filter: blur(1.5px);
+	-webkit-backdrop-filter: blur(1.5px);
+	border-radius: 10px;
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	Z-INDEX : 20;
+}
+
+#modal .modal-window {
+	background: #FFBB00;
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+	backdrop-filter: blur(13.5px);
+	-webkit-backdrop-filter: blur(13.5px);
+	border-radius: 10px;
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	width: 400px;
+
+	height: 570px;
+	position: relative;
+	top: 0px;
+	padding: 10px;
+}
+
+#modal .title {
+	padding-left: 10px;
+	display: inline;
+	text-shadow: 1px 1px 2px gray;
+	color: white;
+}
+
+#modal .title h2 {
+	display: inline;
+}
+
+#modal .close-area {
+	display: inline;
+	float: right;
+	padding-right: 10px;
+	cursor: pointer;
+	text-shadow: 1px 1px 2px gray;
+	color: white;
+}
+
+#modal .content {
+	margin-top: 20px;
+	padding: 0px 10px;
+	text-shadow: 1px 1px 2px gray;
+	color: white;
+}
+
+/*모달2*/
+.modal-overlay2 {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+	backdrop-filter: blur(1.5px);
+	-webkit-backdrop-filter: blur(1.5px);
+	border-radius: 10px;
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	z-index: 20;
+}
+
+#modal2 .modal-window {
+	background : #FFFAE6;
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+	backdrop-filter: blur(13.5px);
+	-webkit-backdrop-filter: blur(13.5px);
+	border-radius: 10px;
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	width: 1000px;
+	height: 700px;
+	position: relative;
+	top: 0px;
+	padding: 10px;
+}
+
+
+
+#modal2 .close-area {
+	display: inline;
+	float: right;
+	padding-right: 10px;
+	cursor: pointer;
+	text-shadow: 1px 1px 2px gray;
+	color: white;
+}
+
+
+
+
+
+.info_img {
+
+	width: 50%;
+	height: 50%;
+	
+}
+
+.user_icon_div{
+	position: relative;
+	overflow: hidden;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	margin: 5px;
+	margin-right: 20px;
+	margin-left: 20px;
+	
+}
+.user_icon_img{
+	width: 70px;
+	height: 70px;
+	position: absolute;
+	background: white;
+	left: 50%;
+	top: -20%;
+	transform: translateX(-50%);
+}
+.modal_info_wrap{
+	width : 50%;
+	height : 80%;
+	margin : 0 auto;
+	color : #464646;
+	float:left
+}
+.modal_info_wrap2{
+	width : 50%;
+	height : 80%;
+	margin : 0 auto;
+	float : left;
+}
+
+.modal_info_id{
+	display : flex;
+	margin-top : 10%;
+	margin-left : 20%;
+
+}
+
+.modal_info_point{
+	width : 100%;
+	height :20%;	
+}
+
+.modal_info_point div{
+	margin-top : 5%;
+	text-align : center;
+}
+
+.modal_info_point span{
+	font-size : 20px;
+	font-weight : 700;
+	color : #FF8900;
+}
+
+.grade_icon{
+	width : 100px;
+	height : 100px;
+}
+
+.grade_icon2{
+	width : 30px;
+	height : 30px;
+}
+
+.modal_info_des{
+	margin : 0 auto;
+	margin-top : 5%;
+	display : flex;
+	flex-direction : column;
+	width : 70%;
+	height : 70%;
+	justify-content : space-around;
+	
+}
+.modal_info_des img {
+	
+}
+.modal_info_des div{
+	margin-left : 10%;
+	
+}
+
+.page-nav img{
+	width : 50px;
+	height : 50px;
+}
+
+
+.modal2_info_id {
+	margin-top : 15%;
+	display : flex;
+	justify-content : center;
+	color : #464646;
+}
+
+.modal2_info_des2{
+	text-align : center;
+	width : 100%;
+	height : 20%;
+	line-height : 100px;
+	color : #464646;
+}
+.modal2_info_des{
+	
+	width : 100%;
+	height : 70%;
+	text-align : center;
+	margin : 0 auto;
+	border-top : 1px dotted #D8D8D8;
+}
+
+.modal2_info_des p{
+	padding-top : 30px;
+	font-size : 20px;
+	font-weight : 700;
+	color : #FF8000;
+}
+.modal2_info_des img{
+	margin-top : 20px;
+	width : 250px;
+	height : 250px;
+}
+
+</style>
+<script type="text/javascript">
+	
+	var ws;
+
+	function wsOpen(){
+		//웹소켓 전송시 현재 방의 번호를 넘겨서 보낸다.
+		ws = new WebSocket("ws://" + location.host + "/chatting/chating/"+$("#room_id").val());
+		wsEvt();
+	}
+		
+	function wsEvt() {
+		ws.onopen = function(data){
+			//소켓이 열리면 동작
+		}
+		
+		ws.onmessage = function(data) {
+			//메시지를 받으면 동작
+			var msg = data.data;
+			if(msg != null && msg.trim() != ''){
+				var d = JSON.parse(msg);
+				if(d.type == "getId"){
+
+					var si = d.sessionId != null ? d.sessionId : "";
+					if(si != ''){
+						$("#sessionId").val(si); 
+					}
+
+			
+					
+				}else if(d.type == "message"){
+					if(d.sessionId == $("#sessionId").val()){
+						var room_id_ajax = [[${room_id}]];
+						
+						$.ajax({
+							url : '/chatting/ajaxChatting',
+							data : {'room_id':room_id_ajax},
+							type : 'POST',
+							success : function(result) { 
+								
+								$(".chating").html(result);
+								let chating = document.getElementById("chatting_center_wrapper"); 
+						   	 	chating.scrollTop = chating.scrollHeight;
+
+							},
+							error: function(){
+								alert("실패");
+							}
+						});
+					
+						
+						
+					}else{
+						var room_id_ajax = [[${room_id}]];
+						
+						$.ajax({
+							url : '/chatting/ajaxChatting',
+							data : {'room_id':room_id_ajax},
+							type : 'POST',
+							success : function(result) { 
+								
+								$(".chating").html(result);
+								let chating = document.getElementById("chatting_center_wrapper"); 
+						   	 	chating.scrollTop = chating.scrollHeight;
+
+							},
+							error: function(){
+								alert("실패");
+							}
+						});
+					}
+					let chating = document.getElementById("chatting_center_wrapper"); 
+			   	 	chating.scrollTop = chating.scrollHeight;	
+				}else{
+					console.warn("unknown type!")
+				}
+			}
+		}
+
+		document.addEventListener("keypress", function(e){
+			if(e.keyCode == 13){ //enter press
+				send();
+			}
+		});
+	}
+	$(document).ready(function() {
+		var userName = '[[${session.sessionUser}]]';
+		if(userName == null || userName.trim() == ""){
+			alert("로그인 후 사용해주세요.");
+			location.href="/main";
+		}else{
+			wsOpen();
+		}
+	});
+
+
+	function send() {
+		var msg = $("#chatting").val();
+		
+		if(msg==null||msg==""){
+
+		} else {
+			if(msg.length>100){
+				alert("메시지가 너무 깁니다.")
+			}
+			else {
+				var option ={
+					type: "message",
+					room_id: $("#room_id").val(),
+					sessionId : $("#sessionId").val(),
+					userName : '[[${session.sessionUser}]]',
+					msg : $("#chatting").val()
+				}
+				ws.send(JSON.stringify(option))
+				$('#chatting').val("");
+			}
+		}
+	}
+
+	
+	
+
+    window.onload=function(){
+    	let chating = document.getElementById("chatting_center_wrapper"); 
+   	 	chating.scrollTop = chating.scrollHeight;
+    };
+</script>
+<title>중고 경매 - 채팅</title>
+
+</head>
+<th:block th:insert="header/header :: headerBody"></th:block>
+<body>
+ <main>
+	<div  class="chatting_top_wrapper">
+		<div class = "roomName_wrap" th:text="${roomName}"></div>
+		<input type="hidden" id="sessionId" value="">
+		<input type="hidden" id="room_id" th:value="${room_id}">
+
+		<div class="complete_wrap">
+			<button id="btn-modal">거래 완료</button>
+		</div>
+
+	</div>
+		
+		
+	<div class ="chatting_center_wrapper" id="chatting_center_wrapper">
+		<div id="chating" class="chating" >
+			<div th:each="chat, status : ${chat_log}">
+				
+						<div th:if="${chat.user_id == session.sessionUser}" class = "chatting_me_box_wrap">
+							<div class = "chatting_me_box_date"><p th:text="${chat_date[status.index]}"></p></div>
+							<div class = "chatting_me_box"><p class='me' th:text="${chat.chat}"></p></div>
+						</div>
+					
+					<div th:if="${chat.user_id != session.sessionUser}" class = "chatting_others_box_wrap">
+						<div class = "user_icon_div"><img class = "user_icon_img" src = "../img/chatting/user_icon.jpg"></div>
+						<div class = "chatting_others_box">
+							<div class = "others_chat" th:text="${chat.user_id}"></div>
+							<div class = "others_chat_chat"><p class='others' th:text="${chat.chat}"></p></div>				
+						</div>
+						<div class = "chatting_others_box_date"><p th:text="${chat_date[status.index]}"></p></div>
+					</div>
+					
+		 	</div>
+		</div>
+		
+	</div>
+	<div class="input_msg">
+	
+				
+					<div class = "input_msg_center"><input id="chatting" placeholder="보내실 메시지를 입력하세요."></div>
+					<div class = "input_msg_bottom"><button class = "input_msg_bottom_button" onclick="send()" id="sendBtn">보내기</button></div>
+		</div>
+	<!-- 모달창 -->
+		
+		<div id="modal" class="modal-overlay">
+			<div class="modal-window">
+				<div class="close-area">×</div>
+				<div class="title">
+					<h2>평가창</h2><br>
+					<h2 th:if="${buyer == session.sessionUser}" th:text="|상대방 ID :${seller}|"></h2>
+					<h2 th:if="${buyer != session.sessionUser}" th:text="|상대방 ID : ${buyer}|"></h2>
+					<br><br>
+				</div>
+				<form method="get" action="/chatting/score">
+					<input type="hidden" name="user_id" th:value="${session.sessionUser}">
+					<input type="hidden" name="product_id" th:value="${product_id}">
+					<input type="hidden" name="room_id" th:value="${room_id}">
+					<div>
+						<input type="range" name="user_score" class="user_score" min="0" max="5" step="1">
+						<h3>
+							평점:<font id="slider_value_view">0</font>
+						</h3>
+						<br><br>
+					</div>
+					<div>
+						<h3>간단한 이유:</h3>
+						<textarea id="cause" name="cause" rows="15" cols="54"></textarea>
+					</div>
+					<br>
+					<div>
+						<input type="submit" value="제출">
+					</div>
+				</form>
+			</div>
+		</div>
+	
+
+<div id="modal2" class="modal-overlay2">
+	<div class="modal-window">
+		<div class="close-area">×</div>
+		<div class = "modal_info_wrap">
+			<div class = "modal_info_id">
+				<div class = "user_icon_div"><img class = "user_icon_img" src = "/img/chatting/user_icon.jpg"></div>
+				<p th:if="${seller == session.sessionUser}" th:text="|${buyer} 님의 등급|">
+				<p th:if="${seller != session.sessionUser}" th:text="|${seller} 님의 등급|">					
+			</div>
+			<div class = "modal_info_point">
+						<div th:if= "${info_msg!=null}"><img class = "grade_icon" src = "../img/icon/g.png"><span>등급 회원</span></div>
+						<div th:if = "${average} == 0"><img class = "grade_icon"src = "../img/icon/f.png"><span>등급 회원</span></div>
+						<div th:if = "${average > 0 && average <= 1}"><img class = "grade_icon"src = "../img/icon/e.png"><span>등급 회원</span></div>
+						<div th:if = "${average > 1 && average <= 2}"><img class = "grade_icon"src = "../img/icon/d.png"><span>등급 회원</span></div>
+						<div th:if = "${average > 2 && average <= 3}"><img class = "grade_icon"src = "../img/icon/c.png"><span>등급 회원</span></div>
+						<div th:if = "${average > 3 && average <= 4}"><img class = "grade_icon"src = "../img/icon/b.png"><span>등급 회원</span></div>
+						<div th:if = "${average > 4 && average <= 5}"><img class = "grade_icon"src = "../img/icon/a.png"><span>등급 회원</span></div>
+			</div>
+			<div class = "modal_info_des">
+			
+				<div><img class = "grade_icon2"src = "/img/icon/a.png"><span> 등급 : 평균 평점 4~5점 사이인 회원</span></div>
+				<div><img class = "grade_icon2"src = "/img/icon/b.png"><span> 등급 : 평균 평점 3~4점 사이인 회원</span></div>
+				<div><img class = "grade_icon2"src = "/img/icon/c.png"><span> 등급 : 평균 평점 2~3점 사이인 회원</span></div>
+				<div><img class = "grade_icon2"src = "/img/icon/d.png"><span> 등급 : 평균 평점 1~2점 사이인 회원</span></div>
+				<div><img class = "grade_icon2"src = "/img/icon/e.png"><span> 등급 : 평균 평점 1~0점 사이인 회원</span></div>
+				<div><img class = "grade_icon2"src = "/img/icon/f.png"><span> 등급 : 평균 평점 0점인 회원</span></div>
+				<div><img class = "grade_icon2"src = "/img/icon/g.png"><span> 등급 : 한번도 거래를 하지 않은 회원</span></div>		
+			</div>
+			
+		</div>
+		<div class = "modal_info_wrap2">
+			<div class = "modal2_info_id">
+				<div class = "user_icon_div"><img class = "user_icon_img" src = "/img/chatting/user_icon.jpg"></div>
+				<p th:if="${seller == session.sessionUser}" th:text="|${buyer} 님의 기타 정보|">
+				<p th:if="${seller != session.sessionUser}" th:text="|${seller} 님의 기타 정보|">					
+			</div>
+			<div class = "modal2_info_des2">
+					<p th:text="|전화번호 : ${member.phone}|"></p>
+			</div>
+			<div class = "modal2_info_des">
+					<p>이 채팅방에서 거래중인 물품이에요</p>
+					<img th:if="${picture.picture_name} == null" class="info_img"src="/img/list/noImage.png">
+					<img th:if="${picture.picture_name} != null" class="info_img" th:src="@{/productUpload/}+${picture.picture_name}">	
+			</div>
+			
+		</div>
+	</div>
+</div>	
+	</main>
+</body>
+<script>
+const modal = document.getElementById("modal")
+function modalOn() {
+    modal.style.display = "flex"
+}
+function isModalOn() {
+    return modal.style.display === "flex"
+}
+function modalOff() {
+    modal.style.display = "none"
+}
+const btnModal = document.getElementById("btn-modal")
+btnModal.addEventListener("click", e => {
+    modalOn()
+})
+const closeBtn = modal.querySelector(".close-area")
+closeBtn.addEventListener("click", e => {
+    modalOff()
+})
+modal.addEventListener("click", e => {
+    const evTarget = e.target
+    if(evTarget.classList.contains("modal-overlay")) {
+//        modalOff()	// 외부 클릭 시
+    }
+})
+window.addEventListener("keyup", e => {
+    if(isModalOn() && e.key === "Escape") {
+        modalOff()
+    }
+})
+
+function ShowSliderValue(sVal){	
+	var obValueView = document.getElementById("slider_value_view");	
+	obValueView.innerHTML = sVal
+}
+var RangeSlider = function(){	
+	var range = $('.user_score');    	
+	range.on('input', function(){				
+		ShowSliderValue(this.value);	
+	});
+};
+	
+RangeSlider();
+
+$( function(){
+	
+	$(".user_icon_div").on("click", function(){
+		
+		var modal2 = document.querySelector(".modal-overlay2");
+		modal2.style.display = "flex";				
+	});
+});
+
+const modal2 = document.getElementById("modal2")
+function modalOn2() {
+    modal2.style.display = "flex"
+}
+function isModalOn2() {
+    return modal2.style.display === "flex"
+}
+function modalOff2() {
+    modal2.style.display = "none"
+}
+const closeBtn2 = modal2.querySelector(".close-area")
+closeBtn2.addEventListener("click", e => {
+	
+    modalOff2()
+})
+modal2.addEventListener("click", e => {
+    const evTarget = e.target
+    if(evTarget.classList.contains("modal-overlay2")) {
+        modalOff2()	// 외부 클릭 시
+    }
+})
+window.addEventListener("keyup", e => {
+    if(isModalOn2() && e.key === "Escape") {
+        modalOff()
+    }
+})
+
+</script>
+</html>
+ 
