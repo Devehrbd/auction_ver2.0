@@ -339,7 +339,8 @@ $(".gps_icon_img").hover(function(){
 						<div class="pic_list">
 							<a class = "pro_img_a" th:href="@{/product/view(product_id=${product.product_id})}">
 								 <img th:if="${picList[i.index]!=null}" class="pro_img" th:src="@{/productUpload/}+${picList[i.index]}">
-								 <img th:unless="${picList[i.index]!=null}" class="pro_img" src="/img/list/noImage.png">
+								 <img th:unless="${picList[i.index]!=null}" class="pro_img" src="/img/list/imageOrange.png">
+								 
 							</a>
 						</div>
 						<!-- pic -->

@@ -797,8 +797,7 @@ $(document).ready( function bidUnit(){
 	<div class="piclist_hidden">
 	
 		<div class="piclist_wrap">
-		
-			<img  th:each="pic, i: ${piclist}" class="piclist_img" th:src="@{/productUpload/}+${pic.picture_name}">
+			<img th:each="pic, i: ${piclist}" class="piclist_img" th:src="@{/productUpload/}+${pic.picture_name}">
 		</div>
 
 		<div class="page-nav">

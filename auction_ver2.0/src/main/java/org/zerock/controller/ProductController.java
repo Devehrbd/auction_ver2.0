@@ -70,7 +70,9 @@ public class ProductController {
 //		
 		List<ProductPicVO> picList = pService.piclistRead(product_id);
 		model.addAttribute("piclist", picList);
-
+		
+		System.out.println(picList);
+		
 		int picCount = pService.picCountRead(product_id);
 
 		model.addAttribute("piccount", picCount);
@@ -243,7 +245,7 @@ public class ProductController {
 			ProductPicVO pPicVo = cService.readProductPicOne(product_id);
 			
 			if(pPicVo == null) {
-				pPic.add("");
+				pPic.add(null);
 			}else{
 				pPic.add(pPicVo.getPicture_name());
 			}

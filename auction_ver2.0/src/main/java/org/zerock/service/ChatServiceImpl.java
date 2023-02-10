@@ -8,6 +8,7 @@ import org.zerock.domain.ChatVO;
 import org.zerock.domain.ProductPicVO;
 import org.zerock.mapper.ChatMapper;
 import org.zerock.mapper.ProductPicMapper;
+import org.zerock.mapper.TotalMapper;
 
 import lombok.AllArgsConstructor;
 
@@ -17,6 +18,7 @@ public class ChatServiceImpl implements ChatService{
 	
 	private ChatMapper chatmapper;
 	private ProductPicMapper pPicMapper;
+	private TotalMapper tMapper;
 	
 	@Override
 	public void insertChat(ChatVO chat) {
@@ -53,5 +55,10 @@ public class ChatServiceImpl implements ChatService{
 	public ProductPicVO readProductPicOne(int product_id) {
 		
 		return pPicMapper.readProductPicOne(product_id);
+	}
+	@Override
+	public String readBidHistoryHighestUser(int product_id) {
+		
+		return tMapper.bidHistoryHighestUser(product_id);
 	}
 }

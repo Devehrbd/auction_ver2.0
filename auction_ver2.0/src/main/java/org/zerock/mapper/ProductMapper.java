@@ -46,6 +46,9 @@ public interface ProductMapper {
 	
 	public ProductVO distanceYES(int product_id);
 	
+	public List<ProductVO> readProductlistWhereUserID(String user_id);
+	
+	
 	// 아래 동길
 	public List<ProductVO> getList();
 	public int delete(int product_id);

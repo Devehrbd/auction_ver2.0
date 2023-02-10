@@ -38,6 +38,9 @@ public interface ProductService {
 	public List<ProductVO> dateSortList_desc();	
 
 	public ProductVO yesDistance(int product_id);
+	public List<ProductVO> ProductlistWhereUserIDRead(String user_id);
+	
+	
 	
 	// 아래 동길
 

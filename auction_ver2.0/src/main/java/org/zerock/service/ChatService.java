@@ -17,4 +17,5 @@ public interface ChatService {
 	//동규
 	public ChatVO chatDataRead(int room_id);
 	public ProductPicVO readProductPicOne(int product_id);
+	public String readBidHistoryHighestUser(int product_id);
 }

@@ -11,4 +11,5 @@ public interface TotalMapper {
 	public List<Bid_historyVO> readTotalBid(@Param("user_id")String user_id,@Param("cri")Criteria cri);
 	public List<Bid_historyVO> readAllTotalBid(String user_id);
 	public int readTotalBidCount(String user_id);
+	public String bidHistoryHighestUser(int product_id);
 }

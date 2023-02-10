@@ -40,6 +40,12 @@ select title from product where product_id = #{product_id};
 		select * from product where user_id = #{user_id} limit #{cri.pageStart},#{cri.onePageNum}
 	</select>
 
+	<select id="readProductlistWhereUserID" resultType="org.zerock.domain.ProductVO">
+		select * from product where user_id = #{user_id}
+	</select>
+
+
+
 <select resultType="Date" id="readRegDate">
 select date from product where product_id = #{product_id}; 
 </select>

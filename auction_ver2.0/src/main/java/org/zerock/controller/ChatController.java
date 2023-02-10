@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.zerock.domain.Bid_historyVO;
 import org.zerock.domain.ChatStorageVO;
 import org.zerock.domain.ChatVO;
 import org.zerock.domain.CompleteVO;
@@ -33,7 +34,7 @@ import org.zerock.service.ChatService;
 import org.zerock.service.MemberService;
 import org.zerock.service.ProductService;
 import org.zerock.service.RoomService;
-
+import org.zerock.service.TotalService;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -54,85 +55,76 @@ public class ChatController {
 	@Setter(onMethod_ = @Autowired)
 	private ProductService pService;
 		
+	@Setter(onMethod_ = @Autowired)
+	private TotalService tService;
 	
 	List<Room> roomList = new ArrayList<Room>();
 	
-	@RequestMapping("/chat")
-	public ModelAndView chat() {
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("chatting/chat");
-		return mv;
-	}
+//	@RequestMapping("/chat")
+//	public ModelAndView chat() {
+//		ModelAndView mv = new ModelAndView();
+//		mv.setViewName("chatting/chat");
+//		return mv;
+//	}
 	
-	/**
-	 * 방 생성하기
-	 * @param params
-	 * @return
-	 */
-	@RequestMapping("/createRoom")
-	public @ResponseBody List<Room> createRoom(@RequestParam HashMap<Object, Object> params){
-		String roomName = (String) params.get("roomName");
-		int product_id =  Integer.parseInt((String)params.get("product_id"));
-		String buyer = (String) params.get("buyer");
-		String seller = (String) params.get("seller");
-		
-		CompleteVO complete = new CompleteVO();
-		
-		if(roomName != null && !roomName.trim().equals("")) {
-			Room room = new Room();
-			room.setProduct_id(product_id);
-			room.setRoomName(roomName);
-			room.setBuyer(buyer);
-			room.setSeller(seller);
-			
-			complete.setProduct_id(product_id);
-			complete.setBuyer_id(buyer);
-			complete.setSeller_id(seller);
-			
-			rService.insertRoom(room);
-			rService.insertComplete(complete);
-			
-			roomList.add(room);
-		}
-		return roomList;
-	}
-	
-	
-	
-	/**
-	 * 방 정보가져오기
-	 * @param params
-	 * @return
-	 */
-	@RequestMapping("/getRoom")
-	public @ResponseBody List<Room> getRoom(@RequestParam HashMap<Object, Object> params){
 
-		String user_id = (String) params.get("user_id");
-		
-//		roomList = rService.selectAllRoom();
-
-		roomList = rService.selectSellerRoom(user_id); // 특정인만 출력
-		roomList.addAll(rService.selectBuyerRoom(user_id)); 
-		
-		List<ChatVO> chat_data = new ArrayList<ChatVO>();
-		
-		for (int i = 0; i < roomList.size(); i++) {
-			ChatVO cVo = new ChatVO();
-			
-			cVo = cService.chatDataRead(roomList.get(i).getRoom_id());
-			chat_data.add(cVo);
-		}
-		
-		
-		
-		
-		return roomList;
-	}
+//	@RequestMapping("/createRoom")
+//	public @ResponseBody List<Room> createRoom(@RequestParam HashMap<Object, Object> params){
+//		String roomName = (String) params.get("roomName");
+//		int product_id =  Integer.parseInt((String)params.get("product_id"));
+//		String buyer = (String) params.get("buyer");
+//		String seller = (String) params.get("seller");
+//		
+//		CompleteVO complete = new CompleteVO();
+//		
+//		if(roomName != null && !roomName.trim().equals("")) {
+//			Room room = new Room();
+//			room.setProduct_id(product_id);
+//			room.setRoomName(roomName);
+//			room.setBuyer(buyer);
+//			room.setSeller(seller);
+//			
+//			complete.setProduct_id(product_id);
+//			complete.setBuyer_id(buyer);
+//			complete.setSeller_id(seller);
+//			
+//			rService.insertRoom(room);
+//			rService.insertComplete(complete);
+//			
+//			roomList.add(room);
+//		}
+//		return roomList;
+//	}
 	
-	/**
-	 * 채팅방
-	 * @return
-	 */
+	
+	
+
+//	@RequestMapping("/getRoom")
+//	public @ResponseBody List<Room> getRoom(@RequestParam HashMap<Object, Object> params){
+//
+//		String user_id = (String) params.get("user_id");
+//		
+////		roomList = rService.selectAllRoom();
+//
+//		roomList = rService.selectSellerRoom(user_id); // 특정인만 출력
+//		roomList.addAll(rService.selectBuyerRoom(user_id)); 
+//		
+//		List<ChatVO> chat_data = new ArrayList<ChatVO>();
+//		
+//		for (int i = 0; i < roomList.size(); i++) {
+//			ChatVO cVo = new ChatVO();
+//			
+//			cVo = cService.chatDataRead(roomList.get(i).getRoom_id());
+//			chat_data.add(cVo);
+//		}
+//		
+//		
+//		
+//		
+//		return roomList;
+//	}
+	
+
 	@RequestMapping("/moveChating")
 	public ModelAndView chating(@RequestParam HashMap<Object, Object> params) {
 		ModelAndView mv = new ModelAndView();
@@ -299,6 +291,80 @@ public class ChatController {
 		HttpSession session = request.getSession();
 		String sessionUser = (String)session.getAttribute("sessionUser");
 		
+		// 방 만들기
+			
+			//1. 내가 올린 물건 리스트 가져오기
+			List<ProductVO> productList = new ArrayList<>();
+			List<ProductVO> productListFilter = pService.ProductlistWhereUserIDRead(sessionUser);
+			
+			//1-1. 내가 등록한 물건중 입찰내역이 있는것
+			for(int i = 0; i< productListFilter.size();i++) {
+				System.out.println(productListFilter.get(i).getCurrent_price());
+				
+				if(productListFilter.get(i).getCurrent_price() != 0) {
+					productList.add(productListFilter.get(i));
+				}
+					
+			}
+			
+
+			//2. 내가 입찰한 물건 리스트 가져오기
+			List<Bid_historyVO> myBidList = tService.TotalBidReadAll(sessionUser);
+			
+			for(int i = 0; i < myBidList.size() ; i++) {
+				int product_id = myBidList.get(i).getProduct_id();
+				ProductVO bidPvo = pService.productRead(product_id);
+				
+				if(bidPvo.getCurrent_price() == myBidList.get(i).getCurrent_price()) {
+					productList.add(bidPvo);
+				}
+			}
+			
+			
+			//3. 3일이 지난기준을이제 확인해봅시다.
+			
+			List<ProductVO> closedProduct = new ArrayList<>(); 
+			
+			for(int i = 0; i < productList.size(); i++) {
+				
+				Date date = new Date();
+				Date regDate = productList.get(i).getDate();
+				long endDate = regDate.getTime()+259200000;
+				long currentDate = date.getTime();
+				
+				//3-1. 마감시
+				if(endDate < currentDate) {	
+					closedProduct.add(productList.get(i));			
+				}
+			}
+			
+			//4. 방 없다면 만들기 
+			for(int i = 0; i < closedProduct.size(); i++) {
+				if(rService.selectOneRoomByProduct_id(closedProduct.get(i).getProduct_id()) == null) {
+					
+					String buyer = cService.readBidHistoryHighestUser(closedProduct.get(i).getProduct_id());
+					
+					Room mkRoom = new Room();
+					mkRoom.setProduct_id(closedProduct.get(i).getProduct_id());
+					mkRoom.setRoomName(closedProduct.get(i).getTitle());
+					mkRoom.setBuyer(buyer);
+					mkRoom.setSeller(closedProduct.get(i).getUser_id());
+					
+					rService.insertRoom(mkRoom);
+					
+					CompleteVO mkComplete = new CompleteVO();
+					mkComplete.setProduct_id(closedProduct.get(i).getProduct_id());
+					mkComplete.setBuyer_id(buyer);
+					mkComplete.setSeller_id(closedProduct.get(i).getUser_id());
+					
+					rService.insertComplete(mkComplete);
+					
+				}
+			}
+		
+		
+		// 방 불러오기
+		
 		List<Room> room = new ArrayList<Room>();
 		
 		room = rService.selectSellerRoom(sessionUser); 
@@ -321,7 +387,12 @@ public class ChatController {
 		for (int i = 0; i < room.size(); i++) {
 			ProductPicVO pPicVo = new ProductPicVO();
 			pPicVo = cService.readProductPicOne(room.get(i).getProduct_id());
-			pic_data.add(pPicVo.getPicture_name());	
+			if(pPicVo != null) {
+				pic_data.add(pPicVo.getPicture_name());	
+			}else {
+				pic_data.add(null);
+			}
+			
 		}
 		
 		if(!room.isEmpty()) {

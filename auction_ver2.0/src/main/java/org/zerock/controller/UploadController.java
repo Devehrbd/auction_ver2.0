@@ -28,7 +28,7 @@ public class UploadController {
 			
 			
 			
-			String uploadFolder = "\\home\\ubuntu\\upload";
+			String uploadFolder = "/home/ubuntu/upload";
 			String voUploadFolder = "/upload";
 			List<ProductPicVO> picList = new ArrayList<ProductPicVO>();
 			

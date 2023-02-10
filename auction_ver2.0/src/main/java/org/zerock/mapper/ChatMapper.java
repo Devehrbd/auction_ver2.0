@@ -17,4 +17,5 @@ public interface ChatMapper {
 	
 	//동규
 	public ChatVO readChatData(int room_id);
+	
 }

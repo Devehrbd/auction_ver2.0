@@ -30,6 +30,12 @@ public class ProductServiceImpl implements ProductService {
 	
 	
 	@Override
+	public List<ProductVO> ProductlistWhereUserIDRead(String user_id) {
+		
+		return pMapper.readProductlistWhereUserID(user_id);
+	}
+	
+	@Override
 	public List<ProductPicVO> piclistRead(int product_id) {
 		return pMapper.piclist(product_id);
 		

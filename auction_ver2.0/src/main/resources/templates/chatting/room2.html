@@ -207,8 +207,8 @@ main{
 		<div class = "room_center_wrap">
 			<div th:if="${room} != null" class = "room_info" th:each="room , i : ${room}">
 				<div class = "room_pic">
-					<img th:if="${room_pic[i.index]} !=null" th:src="@{/productUpload/}+${room_pic[i.index]}">
-					<img th:if="${room_pic[i.index]} ==null" th:src="/img/list/noImage.png">
+					<img th:if="${room_pic[i.index]} != null" th:src="@{/productUpload/}+${room_pic[i.index]}">
+					<img th:if="${room_pic[i.index]} == null" src="../img/list/imageOrange.png">
 				</div>
 				<div class = "room_namechat">
 					<div class = "room_name" th:text="|${room.roomName} 채팅방|"></div>
